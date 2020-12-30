@@ -8,7 +8,8 @@
 /// ```
 ///
 /// Supports positive integers from 1 to 999_999_999_999_999_999
-/// For more information see https://en.wikipedia.org/wiki/Long_and_short_scales.
+///
+/// For more information about the name see [Wikipedia: Long and short scales](https://en.wikipedia.org/wiki/Long_and_short_scales).
 ///
 
 pub fn shortscale(num: u64) -> String {
