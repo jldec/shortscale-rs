@@ -1,7 +1,7 @@
-# shortscale-rs
 [![CI](https://github.com/jldec/shortscale-rs/workflows/CI/badge.svg)](https://github.com/jldec/shortscale-rs/actions)
 
-Rust function to convert numbers into English words using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
+[Rust function](https://docs.rs/shortscale)  
+Converts numbers into English words using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
 
 Supports positive integers from 0 to 999_999_999_999_999_999.
 
