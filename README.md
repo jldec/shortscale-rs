@@ -14,7 +14,8 @@ pub fn shortscale(num: u64) -> String
 ```rust
 assert_eq!(
     shortscale(420_000_999_015),
-    "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen"
+    "four hundred and twenty billion nine hundred \
+    and ninety nine thousand and fifteen"
 );
 ```
 

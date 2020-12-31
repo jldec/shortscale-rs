@@ -1,6 +1,6 @@
 [package]
 name = "shortscale"
-version = "0.1.0"
+version = "1.0.0"
 authors = ["Jurgen Leschner <jldec@ciaosoft.com>"]
 edition = "2018"
 license = "MIT"

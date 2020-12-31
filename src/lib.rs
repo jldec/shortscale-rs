@@ -1,4 +1,5 @@
-/// Convert numbers into English words using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
+/// Convert numbers into English words
+/// using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
 ///
 /// Supports positive integers from 0 to 999_999_999_999_999_999.
 ///
@@ -6,7 +7,8 @@
 /// ```
 /// assert_eq!(
 ///     shortscale::shortscale(420_000_999_015),
-///     "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen"
+///     "four hundred and twenty billion nine hundred \
+///     and ninety nine thousand and fifteen"
 ///     );
 /// ```
 
