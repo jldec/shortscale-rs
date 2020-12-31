@@ -1,22 +1,22 @@
-/// Converts positive numbers to an English string.
+/// Convert numbers into English words using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
+///
+/// Supports positive integers from 0 to 999_999_999_999_999_999.
 ///
 /// # Example
-///
 /// ```
-/// assert_eq!(shortscale::shortscale(420_000_999_015),
-///     "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen");
+/// assert_eq!(
+///     shortscale::shortscale(420_000_999_015),
+///     "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen"
+///     );
 /// ```
-///
-/// Supports positive integers from 1 to 999_999_999_999_999_999
-///
-/// For more information about the name see [Wikipedia: Long and short scales](https://en.wikipedia.org/wiki/Long_and_short_scales).
-///
 
 pub fn shortscale(num: u64) -> String {
-    if num > 999_999_999_999_999_999 {
-        return String::from("somewhat biggish number");
+    // simple lookup in map
+    if num <= 20 || num > 999_999_999_999_999_999 {
+        return String::from(map(num));
     }
 
+    // build a Vec of words
     let vec = [
         jillions(num, 1_000_000_000_000_000), // quadrillions
         jillions(num, 1_000_000_000_000),     // trillions
@@ -27,6 +27,7 @@ pub fn shortscale(num: u64) -> String {
     ]
     .concat();
 
+    // special case "and" separator word before tens and units
     let vec = concat_and(vec, tens_and_units(num));
 
     String::from(vec.join(" "))
@@ -34,10 +35,18 @@ pub fn shortscale(num: u64) -> String {
 
 type Strvec = Vec<&'static str>;
 
+// 0 represented with empty Vec for composition using [Vec].concat()
+fn lookup(num: u64) -> Strvec {
+    match num {
+        0 => vec![],
+        _ => vec![map(num)],
+    }
+}
+
 fn tens_and_units(num: u64) -> Strvec {
     let num = num % 100;
     match num {
-        0..=19 => lookup(num),
+        0..=20 => lookup(num),
         _ => [lookup(num / 10 * 10), lookup(num % 10)].concat(),
     }
 }
@@ -71,15 +80,9 @@ fn concat_and(v1: Strvec, v2: Strvec) -> Strvec {
     }
 }
 
-fn lookup(num: u64) -> Strvec {
-    match num {
-        0 => vec![],
-        _ => vec![map(num)],
-    }
-}
-
 fn map(num: u64) -> &'static str {
     match num {
+        0 => "zero",
         1 => "one",
         2 => "two",
         3 => "three",
@@ -113,15 +116,16 @@ fn map(num: u64) -> &'static str {
         1_000_000_000 => "billion",
         1_000_000_000_000 => "trillion",
         1_000_000_000_000_000 => "quadrillion",
-        _ => "BUG!",
+        _ => "big number",
     }
 }
 
 #[cfg(test)]
 mod tests {
 
-    const TESTS: [(u64, &str); 45] = [
+    const TESTS: [(u64, &str); 46] = [
     /* 00 */
+    (0, "zero"),
     (1, "one"),
     (10, "ten"),
     (11, "eleven"),
@@ -131,8 +135,8 @@ mod tests {
     (30, "thirty"),
     (33, "thirty three"),
     (111, "one hundred and eleven"),
-    (120, "one hundred and twenty"),
     /* 10 */
+    (120, "one hundred and twenty"),
     (121, "one hundred and twenty one"),
     (300, "three hundred"),
     (999, "nine hundred and ninety nine"),
@@ -142,8 +146,8 @@ mod tests {
     (2_011, "two thousand and eleven"),
     (2_020, "two thousand and twenty"),
     (2_050, "two thousand and fifty"),
-    (2_300, "two thousand three hundred"),
     /* 20 */
+    (2_300, "two thousand three hundred"),
     (2_301, "two thousand three hundred and one"),
     (30_020, "thirty thousand and twenty"),
     (430_020, "four hundred and thirty thousand and twenty"),
@@ -153,8 +157,8 @@ mod tests {
     (1_000_000, "one million"),
     (1_001_000, "one million one thousand"),
     (1_002_000, "one million two thousand"),
-    (1_002_004, "one million two thousand and four"),
     /* 30 */
+    (1_002_004, "one million two thousand and four"),
     (1_002_011, "one million two thousand and eleven"),
     (1_002_020, "one million two thousand and twenty"),
     (1_002_050, "one million two thousand and fifty"),
@@ -164,8 +168,8 @@ mod tests {
     (1_430_020, "one million four hundred and thirty thousand and twenty"),
     (1_430_920, "one million four hundred and thirty thousand nine hundred and twenty"),
     (1_999_001, "one million nine hundred and ninety nine thousand and one"),
-    (100_999_120, "one hundred million nine hundred and ninety nine thousand one hundred and twenty"),
     /* 40 */
+    (100_999_120, "one hundred million nine hundred and ninety nine thousand one hundred and twenty"),
     (999_999_120, "nine hundred and ninety nine million nine hundred and ninety nine thousand one hundred and twenty"),
     (420_000_999_015, "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen"),
     (9_007_199_254_740_999, "nine quadrillion seven trillion one hundred and ninety nine billion \
@@ -173,7 +177,7 @@ mod tests {
     (999_999_999_999_999_999, "nine hundred and ninety nine quadrillion nine hundred and ninety nine trillion \
         nine hundred and ninety nine billion nine hundred and ninety nine million nine hundred and ninety nine thousand \
         nine hundred and ninety nine"),
-    (1_999_999_999_999_999_999, "somewhat biggish number")
+    (1_999_999_999_999_999_999, "big number")
     ];
 
     #[test]
