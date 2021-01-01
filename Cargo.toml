@@ -1,10 +1,16 @@
 [package]
 name = "shortscale"
-version = "1.0.0"
+version = "1.0.1"
 authors = ["Jurgen Leschner <jldec@ciaosoft.com>"]
 edition = "2018"
 license = "MIT"
 description = "Convert numbers into English words using the short scale."
 repository = "https://github.com/jldec/shortscale-rs"
+
+[lib]
+name = "shortscale"
+path = "src/shortscale.rs"
+test = false
+doctest = false
 
 [dependencies]
