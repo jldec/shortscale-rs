@@ -1,16 +1,17 @@
-[![CI](https://github.com/jldec/shortscale-rs/workflows/CI/badge.svg)](https://github.com/jldec/shortscale-rs/actions)
+# shortscale
 
-[docs.rs/shortscale](https://docs.rs/shortscale) [crates.io/crates/shortscale](https://crates.io/crates/shortscale)
+[![CI](https://github.com/jldec/shortscale-rs/workflows/CI/badge.svg)](https://github.com/jldec/shortscale-rs/actions)  
+[Rust docs](https://docs.rs/shortscale) | [crates.io](https://crates.io/crates/shortscale)
 
-Converts numbers into English words.
+Rust lib to convert numbers into English words.
 
 The [short scale](https://en.wikipedia.org/wiki/Long_and_short_scale_words#Comparison),
 has different words for each power of 1000.
 
 This library expresses numbers from zero to thousands,
-millions, billions, trillions, and quadrillions (up to 999_999_999_999_999_999).
+millions, billions, trillions, and quadrillions, up to 999_999_999_999_999_999.
 
-### Library function signature
+### Function
 ```rust
 pub fn shortscale(num: u64) -> String
 ```

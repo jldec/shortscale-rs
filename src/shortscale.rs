@@ -6,9 +6,10 @@
 //! has different words for each power of 1000.
 //!
 //! This library expresses numbers from zero to thousands,
-//! millions, billions, trillions, and quadrillions (up to 999_999_999_999_999_999).
+//! millions, billions, trillions, and quadrillions, up to 999_999_999_999_999_999.
 //!
-//! [crates.io/crates/shortscale](https://crates.io/crates/shortscale)  
+//! [github](https://github.com/jldec/shortscale-rs) | [crates.io](https://crates.io/crates/shortscale)
+//!
 //! Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
 
 /// Returns String with words given an unsigned integer.
@@ -125,7 +126,7 @@ fn map(num: u64) -> &'static str {
         50 => "fifty",
         60 => "sixty",
         70 => "seventy",
-        80 => "eightty",
+        80 => "eighty",
         90 => "ninety",
         100 => "hundred",
         1_000 => "thousand",
