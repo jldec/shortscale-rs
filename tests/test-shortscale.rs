@@ -51,7 +51,7 @@ fn call_with_a_bunch_of_different_values() {
     (999_999_999_999_999_999, "nine hundred and ninety nine quadrillion nine hundred and ninety nine trillion \
         nine hundred and ninety nine billion nine hundred and ninety nine million nine hundred and ninety nine thousand \
         nine hundred and ninety nine"),
-    (1_999_999_999_999_999_999, "big number")
+    (1_999_999_999_999_999_999, "(big number)")
     ].iter() {
         println!("test {}", num);
         assert_eq!(shortscale(*num), String::from(*expected));

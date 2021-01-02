@@ -1,7 +1,12 @@
 // shortscale.rs
 //
-//! Converts numbers into English words
-//! using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
+//! Converts numbers into English words.
+//!
+//! The [short scale](https://en.wikipedia.org/wiki/Long_and_short_scale#Comparison),
+//! has different words for each power of 1000.
+//!
+//! This library expresses numbers from zero to thousands,
+//! millions, billions, trillions, and quadrillions (up to 999_999_999_999_999_999).
 //!
 //! [crates.io/crates/shortscale](https://crates.io/crates/shortscale)  
 //! Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
@@ -9,7 +14,7 @@
 /// Returns String with words given an unsigned integer.
 ///
 /// Supports positive integers from 0 to 999_999_999_999_999_999.  
-/// Larger values return "big number".
+/// Larger values return "(big number)".
 ///
 /// # Example
 /// ```
@@ -27,18 +32,18 @@ pub fn shortscale(num: u64) -> String {
         return String::from(map(num));
     }
 
-    // build a Vec of words
+    // build a Vec of words for supported scales
     let vec = [
-        jillions(num, 1_000_000_000_000_000), // quadrillions
-        jillions(num, 1_000_000_000_000),     // trillions
-        jillions(num, 1_000_000_000),         // billions
-        jillions(num, 1_000_000),             // millions
-        jillions(num, 1_000),                 // thousands
+        scale(num, 1_000_000_000_000_000), // quadrillions
+        scale(num, 1_000_000_000_000),     // trillions
+        scale(num, 1_000_000_000),         // billions
+        scale(num, 1_000_000),             // millions
+        scale(num, 1_000),                 // thousands
         hundreds(num),
     ]
     .concat();
 
-    // special case "and" separator word before tens and units
+    // special case: "and" separator word before tens and units
     let vec = concat_and(vec, tens_and_units(num));
 
     // return String
@@ -64,18 +69,18 @@ fn tens_and_units(num: u64) -> Strvec {
 }
 
 fn hundreds(num: u64) -> Strvec {
-    let num = num % 1000 / 100;
+    let num = num / 100 % 10;
     match num {
         0 => vec![],
         _ => [lookup(num), lookup(100)].concat(),
     }
 }
 
-fn jillions(num: u64, scale: u64) -> Strvec {
-    let num = num % (scale * 1000) / scale;
+fn scale(num: u64, thousands: u64) -> Strvec {
+    let num = num / thousands % 1_000;
     match num {
         0 => vec![],
-        _ => [one_to_999(num), lookup(scale)].concat(),
+        _ => [one_to_999(num), lookup(thousands)].concat(),
     }
 }
 
@@ -128,6 +133,6 @@ fn map(num: u64) -> &'static str {
         1_000_000_000 => "billion",
         1_000_000_000_000 => "trillion",
         1_000_000_000_000_000 => "quadrillion",
-        _ => "big number",
+        _ => "(big number)",
     }
 }

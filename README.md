@@ -1,9 +1,14 @@
 [![CI](https://github.com/jldec/shortscale-rs/workflows/CI/badge.svg)](https://github.com/jldec/shortscale-rs/actions)
 
-[Rust docs](https://docs.rs/shortscale)  
-Converts numbers into English words using the [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison).
+[docs.rs/shortscale](https://docs.rs/shortscale) [crates.io/crates/shortscale](https://crates.io/crates/shortscale)
 
-Supports positive integers from 0 to 999_999_999_999_999_999.
+Converts numbers into English words.
+
+The [short scale](https://en.wikipedia.org/wiki/Long_and_short_scale_words#Comparison),
+has different words for each power of 1000.
+
+This library expresses numbers from zero to thousands,
+millions, billions, trillions, and quadrillions (up to 999_999_999_999_999_999).
 
 ### Library function signature
 ```rust
@@ -22,3 +27,5 @@ assert_eq!(
 ```
 
 For the JavaScript version see [jldec/shortscale](https://github.com/jldec/shortscale).
+
+Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
