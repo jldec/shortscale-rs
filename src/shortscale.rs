@@ -8,13 +8,22 @@
 //! This library expresses numbers from zero to thousands,
 //! millions, billions, trillions, and quadrillions, up to 999_999_999_999_999_999.
 //!
-//! ### Benchmarks
-//! Performance measured with `cargo bench` on 2.6 GHz MBP Intel Core i7
+//! ### Sample benchmarks
+//!
+//! cargo bench on MacOS Catalina 2.6 GHz Intel Core i7
 //! ```txt
 //! shortscale                250.56 ns
 //! shortscale_vec_push       356.90 ns
 //! shortscale_vec_concat   4.686 us
 //! shortscale_string_join  5.395 us
+//! ```
+//!
+//! cargo bench on GitHub Actions Ubuntu 18.04
+//! ```txt
+//! shortscale                271.79 ns
+//! shortscale_vec_push       258.43 ns
+//! shortscale_vec_concat   1.4559 us
+//! shortscale_string_join  1.6146 us
 //! ```
 //!
 //! [github](https://github.com/jldec/shortscale-rs) | [crates.io](https://crates.io/crates/shortscale)
@@ -151,7 +160,8 @@ type Strvec = Vec<&'static str>;
 
 /// Reimplementation of `shortscale`.  
 /// Uses Vec builder instead of String builder.  
-/// This implementation is ~60% slower than building a String directly.
+/// On MacOS this implementation is ~60% slower than building a String directly.  
+/// On GitHub Actions Ubuntu it is slightly faster.
 pub fn shortscale_vec_push(num: u64) -> String {
     // simple lookup in map
     if num <= 20 || num > 999_999_999_999_999_999 {
