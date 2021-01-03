@@ -1,4 +1,4 @@
-use shortscale::shortscale;
+use shortscale;
 
 #[test]
 fn call_with_a_bunch_of_different_values() {
@@ -53,7 +53,13 @@ fn call_with_a_bunch_of_different_values() {
         nine hundred and ninety nine"),
     (1_999_999_999_999_999_999, "(big number)")
     ].iter() {
-        println!("test {}", num);
-        assert_eq!(shortscale(*num), String::from(*expected));
+        println!("shortscale {}", num);
+        assert_eq!(shortscale::shortscale(*num), String::from(*expected));
+        println!("shortscale_string {}", num);
+        assert_eq!(shortscale::shortscale_vec_push(*num), String::from(*expected));
+        println!("shortscale_vec_concat {}", num);
+        assert_eq!(shortscale::shortscale_vec_concat(*num), String::from(*expected));
+        println!("shortscale_string_join {}", num);
+        assert_eq!(shortscale::shortscale_string_join(*num), String::from(*expected));
     }
 }
