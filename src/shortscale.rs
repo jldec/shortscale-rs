@@ -2,7 +2,7 @@
 //
 //! Converts numbers into English words.
 //!
-//! The [short scale](https://en.wikipedia.org/wiki/Long_and_short_scale#Comparison),
+//! The [short scale](https://en.wikipedia.org/wiki/Long_and_short_scales#Comparison),
 //! has different words for each power of 1000.
 //!
 //! This library expresses numbers from zero to thousands,
