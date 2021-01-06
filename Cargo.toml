@@ -1,6 +1,6 @@
 [package]
 name = "shortscale"
-version = "1.1.1"
+version = "1.2.0"
 authors = ["Jurgen Leschner <jldec@ciaosoft.com>"]
 edition = "2018"
 license = "MIT"
@@ -16,7 +16,7 @@ doctest = false
 [dependencies]
 
 [dev-dependencies]
-criterion = "0.3"
+bencher = "0.1.5"
 
 [[bench]]
 name = "bench-shortscale"
