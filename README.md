@@ -27,6 +27,30 @@ assert_eq!(
 );
 ```
 
+### String writer
+For efficient writing into a mutable pre-allocated string.  
+The performance difference is small and varies across systems.
+
+```rust
+pub fn shortscale_string_writer(s: &mut String, num: u64)
+```
+
+```rust
+use shortscale::shortscale_string_writer;
+let mut my_string = String::new();
+shortscale_string_writer(&mut my_string, 0);
+assert_eq!(my_string, "zero");
+```
+
+### Extra
+As a record of my first foray into rust, older implementations are preserved under
+[shortscale::extra](https://docs.rs/shortscale/latest/shortscale/extra/index.html).
+Benchmarks are also visible in the GitHub Actions logs. For benchmarks on other systems run:
+```sh
+RUSTFLAGS="--cfg extra" cargo bench
+```
+
 For the JavaScript version see [jldec/shortscale](https://github.com/jldec/shortscale).
+
 
 Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license

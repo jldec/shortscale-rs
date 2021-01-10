@@ -39,13 +39,8 @@ pub fn shortscale(num: u64) -> String {
 /// ```
 /// use shortscale::shortscale_string_writer;
 /// let mut my_string = String::new();
-/// shortscale_string_writer(&mut my_string, 420_000_999_015);
-///
-/// assert_eq!(
-///     my_string,
-///     "four hundred and twenty billion nine hundred \
-///     and ninety nine thousand and fifteen"
-///     );
+/// shortscale_string_writer(&mut my_string, 0);
+/// assert_eq!(my_string, "zero");
 /// ```
 pub fn shortscale_string_writer(s: &mut String, num: u64) {
     // simple lookup in map

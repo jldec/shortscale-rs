@@ -60,7 +60,7 @@ pub fn shortscale_display(num: u64) -> String {
 /// use std::fmt::Write;
 ///
 /// let mut buf = String::with_capacity(100);
-/// let numwords = shortscale::NumWords::new(420_000_999_015);
+/// let numwords = shortscale::extra::NumWords::new(420_000_999_015);
 ///
 /// // write to buffer
 /// println!("buf.len() before: {}", buf.len());
