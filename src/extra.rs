@@ -16,10 +16,13 @@
 //!
 //! cargo bench on GitHub Actions Ubuntu 18.04
 //! ```txt
-//! shortscale                271 ns
-//! shortscale_vec_push       258 ns
-//! shortscale_vec_concat    1455 ns
-//! shortscale_string_join   1614 ns
+//! test a_shortscale                        ... bench:         276 ns/iter (+/- 22)
+//! test b_shortscale_string_writer_no_alloc ... bench:         256 ns/iter (+/- 10)
+//! test c_str_push                          ... bench:         275 ns/iter (+/- 6)
+//! test d_vec_push                          ... bench:         264 ns/iter (+/- 8)
+//! test e_display_no_alloc                  ... bench:         640 ns/iter (+/- 53)
+//! test f_vec_concat                        ... bench:       1,600 ns/iter (+/- 85)
+//! test g_string_join                       ... bench:       1,754 ns/iter (+/- 9)
 //! ```
 //!
 
