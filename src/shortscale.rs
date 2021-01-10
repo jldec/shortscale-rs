@@ -60,7 +60,7 @@ pub fn shortscale_string_writer(s: &mut String, num: u64) {
 }
 
 fn push_word(s: &mut String, len: &mut usize, word: &str) {
-    if s.len() > 0 {
+    if *len > 0 {
         s.push_str(" ");
         *len += " ".len();
     }
