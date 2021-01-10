@@ -53,7 +53,7 @@ pub fn shortscale_string_writer(s: &mut String, num: u64) {
         s.push_str(map(num));
         return;
     }
-    let mut len: usize= 0; // mutated by push_words
+    let mut len: usize = 0; // mutated by push_words
     push_scale(s, &mut len, num, 1_000_000_000_000_000); // quadrillions
     push_scale(s, &mut len, num, 1_000_000_000_000); // trillions
     push_scale(s, &mut len, num, 1_000_000_000); // billions
@@ -67,9 +67,10 @@ pub fn shortscale_string_writer(s: &mut String, num: u64) {
 fn push_word(s: &mut String, len: &mut usize, word: &str) {
     if s.len() > 0 {
         s.push_str(" ");
+        *len += " ".len();
     }
     s.push_str(word);
-    *len = 1;
+    *len += word.len();
 }
 
 fn push_tens_and_units(s: &mut String, len: &mut usize, num: u64, and_word: bool) {

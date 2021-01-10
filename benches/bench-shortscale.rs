@@ -35,7 +35,8 @@ fn e_display_no_alloc(b: &mut Bencher) {
     let mut buf = String::with_capacity(238);
     b.iter(|| {
         buf.clear();
-        write!(&mut buf, "{}", shortscale::extra::NumWords::new(black_box(NUM))).unwrap();
+        let words = shortscale::extra::NumWords::new(black_box(NUM));
+        write!(&mut buf, "{}", words).unwrap();
     });
 }
 

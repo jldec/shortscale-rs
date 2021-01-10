@@ -64,16 +64,10 @@ const TESTS: [(u64, &str); 47] = [
 fn test_shortscale() {
     for (num, expected) in TESTS.iter() {
         println!("shortscale {} - {} bytes", num, expected.len());
-        assert_eq!(
-            shortscale::shortscale(*num),
-            String::from(*expected)
-        );
+        assert_eq!(shortscale::shortscale(*num), String::from(*expected));
         let mut buf = String::new();
         shortscale::shortscale_string_writer(&mut buf, *num);
-        assert_eq!(
-            buf,
-            String::from(*expected)
-        );
+        assert_eq!(buf, String::from(*expected));
     }
 }
 

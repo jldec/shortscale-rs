@@ -34,10 +34,9 @@ use std::fmt::Result;
 use std::fmt::Write;
 
 /// Implementation writes into a pre-allocated String  
-/// using NumWords Display trait.  
+/// using [NumWords](./struct.NumWords.html) Display trait.  
 /// ...
 pub fn shortscale_display(num: u64) -> String {
-    // FIXME: better tradeoff perf against space.
     let mut s = String::with_capacity(238);
     write!(&mut s, "{}", NumWords::new(num)).unwrap();
     return s;
@@ -52,7 +51,7 @@ pub fn shortscale_display(num: u64) -> String {
 /// out to be greater than the cost of String allocation.
 ///
 /// The simpler solution was to add a string writer function to shortscale
-/// directly mutating an existing string, rother than going 
+/// directly mutating an existing string, rother than going
 /// through the formatter code.
 ///
 /// # Example
@@ -162,7 +161,6 @@ impl fmt::Display for NumWords {
         self.display(f)
     }
 }
-
 
 /* ******************************************************************** */
 
