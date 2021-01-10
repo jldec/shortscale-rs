@@ -37,9 +37,10 @@ pub fn shortscale_string_writer(s: &mut String, num: u64)
 
 ```rust
 use shortscale::shortscale_string_writer;
-let mut my_string = String::new();
-shortscale_string_writer(&mut my_string, 0);
-assert_eq!(my_string, "zero");
+let mut my_string = String::from("The number 27 in words is ");
+my_string.reserve(1024); // pre-allocate capacity (for performance only)
+shortscale_string_writer(&mut my_string, 27);
+assert_eq!(my_string, "The number 27 in words is twenty seven");
 ```
 
 ### Extra
