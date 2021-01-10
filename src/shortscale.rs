@@ -12,8 +12,7 @@
 //!
 //! Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
 
-/// Returns String with words given an unsigned integer.  
-/// Builder implementation mutates pre-allocated String by calling push_str().  
+/// Returns String with words given an unsigned integer.
 ///
 /// Supports positive integers from 0 to 999_999_999_999_999_999.  
 /// Larger values return "(big number)".
@@ -29,71 +28,85 @@
 ///     );
 /// ```
 pub fn shortscale(num: u64) -> String {
-    // simple lookup in map
-    if num <= 20 || num > 999_999_999_999_999_999 {
-        return String::from(map(num));
-    }
-
     let mut s = String::with_capacity(238);
-
-    push_scale(&mut s, num, 1_000_000_000_000_000); // quadrillions
-    push_scale(&mut s, num, 1_000_000_000_000); // trillions
-    push_scale(&mut s, num, 1_000_000_000); // billions
-    push_scale(&mut s, num, 1_000_000); // millions
-    push_scale(&mut s, num, 1_000); // thousands
-    push_hundreds(&mut s, num);
-    let and_word: bool = s.len() > 0;
-    push_tens_and_units(&mut s, num, and_word);
-
+    shortscale_string_writer(&mut s, num);
     return s;
 }
 
-fn push_word(s: &mut String, word: &str) {
-    if s.len() > 0 {
-        s.push_str(" ");
+/// Same as shortscale but writes words into mutable String.  
+///
+/// # Example
+/// ```
+/// use shortscale::shortscale_string_writer;
+/// let mut my_string = String::new();
+/// shortscale_string_writer(&mut my_string, 0);
+/// assert_eq!(my_string, "zero");
+/// ```
+pub fn shortscale_string_writer(s: &mut String, num: u64) {
+    // simple lookup in map
+    if num <= 20 || num > 999_999_999_999_999_999 {
+        s.push_str(map(num));
+        return;
     }
-    s.push_str(word);
+    let mut len: usize = 0; // mutated by push_words
+    push_scale(s, &mut len, num, 1_000_000_000_000_000); // quadrillions
+    push_scale(s, &mut len, num, 1_000_000_000_000); // trillions
+    push_scale(s, &mut len, num, 1_000_000_000); // billions
+    push_scale(s, &mut len, num, 1_000_000); // millions
+    push_scale(s, &mut len, num, 1_000); // thousands
+    push_hundreds(s, &mut len, num);
+    let and_word: bool = len > 0;
+    push_tens_and_units(s, &mut len, num, and_word);
 }
 
-fn push_tens_and_units(s: &mut String, num: u64, and_word: bool) {
+fn push_word(s: &mut String, len: &mut usize, word: &str) {
+    if s.len() > 0 {
+        s.push_str(" ");
+        *len += " ".len();
+    }
+    s.push_str(word);
+    *len += word.len();
+}
+
+fn push_tens_and_units(s: &mut String, len: &mut usize, num: u64, and_word: bool) {
     let num = num % 100;
     if num == 0 {
         return;
     }
     if and_word {
-        push_word(s, "and");
+        push_word(s, len, "and");
     }
     match num {
-        1..=20 => push_word(s, map(num)),
+        1..=20 => push_word(s, len, map(num)),
         _ => {
-            push_word(s, map(num / 10 * 10));
+            push_word(s, len, map(num / 10 * 10));
             let num = num % 10;
             match num {
                 0 => (),
-                _ => push_word(s, map(num)),
+                _ => push_word(s, len, map(num)),
             };
         }
     };
 }
 
-fn push_hundreds(s: &mut String, num: u64) {
+fn push_hundreds(s: &mut String, len: &mut usize, num: u64) {
     let num = num / 100 % 10;
     if num == 0 {
         return;
     }
-    push_word(s, map(num));
-    push_word(s, map(100))
+    push_word(s, len, map(num));
+    push_word(s, len, map(100))
 }
 
-fn push_scale(s: &mut String, num: u64, thousands: u64) {
+fn push_scale(s: &mut String, len: &mut usize, num: u64, thousands: u64) {
     let num = num / thousands % 1_000;
     if num == 0 {
         return;
     }
-    push_hundreds(s, num);
+    push_hundreds(s, len, num);
     let and_word: bool = (num / 100 % 10) > 0;
-    push_tens_and_units(s, num, and_word);
-    push_word(s, map(thousands));
+    push_tens_and_units(s, len, num, and_word);
+    push_word(s, len, map(thousands));
 }
 
 fn map(num: u64) -> &'static str {

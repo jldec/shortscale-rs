@@ -5,29 +5,244 @@
 //!
 //! cargo bench on MacOS Catalina 2.6 GHz Intel Core i7
 //! ```txt
-//! shortscale                228 ns
-//! shortscale_vec_push       353 ns
-//! shortscale_vec_concat    4602 ns
-//! shortscale_string_join   5337 ns
+//! test a_shortscale                        ... bench:         239 ns/iter (+/- 20)
+//! test b_shortscale_string_writer_no_alloc ... bench:         180 ns/iter (+/- 13)
+//! test c_str_push                          ... bench:         239 ns/iter (+/- 28)
+//! test d_vec_push                          ... bench:         356 ns/iter (+/- 20)
+//! test e_display_no_alloc                  ... bench:         510 ns/iter (+/- 53)
+//! test f_vec_concat                        ... bench:       4,571 ns/iter (+/- 426)
+//! test g_string_join                       ... bench:       5,573 ns/iter (+/- 347)
 //! ```
 //!
 //! cargo bench on GitHub Actions Ubuntu 18.04
 //! ```txt
-//! shortscale                271 ns
-//! shortscale_vec_push       258 ns
-//! shortscale_vec_concat    1455 ns
-//! shortscale_string_join   1614 ns
+//! test a_shortscale                        ... bench:         276 ns/iter (+/- 22)
+//! test b_shortscale_string_writer_no_alloc ... bench:         256 ns/iter (+/- 10)
+//! test c_str_push                          ... bench:         275 ns/iter (+/- 6)
+//! test d_vec_push                          ... bench:         264 ns/iter (+/- 8)
+//! test e_display_no_alloc                  ... bench:         640 ns/iter (+/- 53)
+//! test f_vec_concat                        ... bench:       1,600 ns/iter (+/- 85)
+//! test g_string_join                       ... bench:       1,754 ns/iter (+/- 9)
 //! ```
 //!
 
 use crate::map;
 
+use std::fmt;
+use std::fmt::Formatter as Fmt;
+use std::fmt::Result;
+use std::fmt::Write;
+
+/// Implementation writes into a pre-allocated String  
+/// using [NumWords](./struct.NumWords.html) Display trait.  
+/// ...
+pub fn shortscale_display(num: u64) -> String {
+    let mut s = String::with_capacity(238);
+    write!(&mut s, "{}", NumWords::new(num)).unwrap();
+    return s;
+}
+
+/// Expose shortscale Display trait implementation  
+/// for easy to_string() or write!() into an existing String.
+///
+/// This experiment was supposed to be faster than shortscale
+/// because we can eliminate the allocation of a new String. However,
+/// the overhead of making multiple fmt::Formatter.write_str() calls turned
+/// out to be greater than the cost of String allocation.
+///
+/// The simpler solution was to add a string writer function to shortscale
+/// directly mutating an existing string, rother than going
+/// through the formatter code.
+///
+/// # Example
+/// ```
+/// use shortscale;
+/// use std::fmt::Write;
+///
+/// let mut buf = String::with_capacity(100);
+/// let numwords = shortscale::extra::NumWords::new(420_000_999_015);
+///
+/// // write to buffer
+/// println!("buf.len() before: {}", buf.len());
+/// write!(&mut buf, "{}", numwords).unwrap();
+/// println!("buf.len()  after: {}", buf.len());
+///
+/// // or simply convert to String (may do multiple allocs)
+/// assert_eq!(
+///     numwords.to_string(),
+///     "four hundred and twenty billion nine hundred \
+///     and ninety nine thousand and fifteen"
+///     );
+/// ```
+#[derive(Debug)]
+pub struct NumWords {
+    n: u64,
+}
+
+impl NumWords {
+    pub fn new(n: u64) -> Self {
+        Self { n }
+    }
+
+    fn display(&self, f: &mut Fmt<'_>) -> Result {
+        // short circuit single words
+        if self.n <= 20 || self.n > 999_999_999_999_999_999 {
+            return write!(f, "{}", map(self.n));
+        }
+
+        let mut len: usize = 0;
+        self.scale(f, &mut len, 1_000_000_000_000_000)?; // quadrillions
+        self.scale(f, &mut len, 1_000_000_000_000)?; // trillions
+        self.scale(f, &mut len, 1_000_000_000)?; // billions
+        self.scale(f, &mut len, 1_000_000)?; // millions
+        self.scale(f, &mut len, 1_000)?; // thousands
+        self.hundreds(f, self.n, &mut len)?;
+        self.tens_and_units(f, self.n, len > 0, &mut len)?;
+        Ok(())
+    }
+
+    fn tens_and_units(&self, f: &mut Fmt<'_>, num: u64, and_word: bool, len: &mut usize) -> Result {
+        let num = num % 100;
+        if num == 0 {
+            return Ok(());
+        }
+        if and_word {
+            self.write_word(f, "and", len)?;
+        };
+        match num {
+            1..=20 => self.write_word(f, map(num), len)?,
+            _ => {
+                self.write_word(f, map(num / 10 * 10), len)?;
+                let num = num % 10;
+                match num {
+                    0 => (),
+                    _ => self.write_word(f, map(num), len)?,
+                }
+            }
+        }
+        Ok(())
+    }
+
+    fn hundreds(&self, f: &mut Fmt<'_>, num: u64, len: &mut usize) -> Result {
+        let num = num / 100 % 10;
+        if num == 0 {
+            return Ok(());
+        }
+        self.write_word(f, map(num), len)?;
+        self.write_word(f, map(100), len)?;
+        Ok(())
+    }
+
+    fn scale(&self, f: &mut Fmt<'_>, len: &mut usize, thousands: u64) -> Result {
+        let num = self.n / thousands % 1_000;
+        if num == 0 {
+            return Ok(());
+        }
+        self.hundreds(f, num, len)?;
+        let and_word: bool = (num / 100 % 10) > 0;
+        self.tens_and_units(f, num, and_word, len)?;
+        self.write_word(f, map(thousands), len)?;
+        Ok(())
+    }
+
+    fn write_word(&self, f: &mut Fmt<'_>, word: &str, len: &mut usize) -> Result {
+        if *len > 0 {
+            f.write_str(" ")?;
+            *len += " ".len();
+        }
+        f.write_str(word)?;
+        *len += word.len();
+        Ok(())
+    }
+}
+
+impl fmt::Display for NumWords {
+    fn fmt(&self, f: &mut Fmt<'_>) -> Result {
+        self.display(f)
+    }
+}
+
+/* ******************************************************************** */
+
+/// Implementation pushes str's directly into a preallocated String.  
+/// ...
+pub fn shortscale_str_push(num: u64) -> String {
+    // simple lookup in map
+    if num <= 20 || num > 999_999_999_999_999_999 {
+        return String::from(map(num));
+    }
+
+    let mut s = String::with_capacity(238);
+
+    push_scale(&mut s, num, 1_000_000_000_000_000); // quadrillions
+    push_scale(&mut s, num, 1_000_000_000_000); // trillions
+    push_scale(&mut s, num, 1_000_000_000); // billions
+    push_scale(&mut s, num, 1_000_000); // millions
+    push_scale(&mut s, num, 1_000); // thousands
+    push_hundreds(&mut s, num);
+    let and_word: bool = s.len() > 0;
+    push_tens_and_units(&mut s, num, and_word);
+
+    return s;
+}
+
+fn push_word(s: &mut String, word: &str) {
+    if s.len() > 0 {
+        s.push_str(" ");
+    }
+    s.push_str(word);
+}
+
+fn push_tens_and_units(s: &mut String, num: u64, and_word: bool) {
+    let num = num % 100;
+    if num == 0 {
+        return;
+    }
+    if and_word {
+        push_word(s, "and");
+    }
+    match num {
+        1..=20 => push_word(s, map(num)),
+        _ => {
+            push_word(s, map(num / 10 * 10));
+            let num = num % 10;
+            match num {
+                0 => (),
+                _ => push_word(s, map(num)),
+            };
+        }
+    };
+}
+
+fn push_hundreds(s: &mut String, num: u64) {
+    let num = num / 100 % 10;
+    if num == 0 {
+        return;
+    }
+    push_word(s, map(num));
+    push_word(s, map(100))
+}
+
+fn push_scale(s: &mut String, num: u64, thousands: u64) {
+    let num = num / thousands % 1_000;
+    if num == 0 {
+        return;
+    }
+    push_hundreds(s, num);
+    let and_word: bool = (num / 100 % 10) > 0;
+    push_tens_and_units(s, num, and_word);
+    push_word(s, map(thousands));
+}
+
+/* ******************************************************************** */
+
 type Strvec = Vec<&'static str>;
 
-/// Reimplementation of `shortscale`.  
+/// Reimplementation of shortscale_str_push.  
 /// Uses Vec builder instead of String builder.  
 /// On MacOS this implementation is ~60% slower than building a String directly.  
-/// On GitHub Actions Ubuntu it is slightly faster.
+/// On GitHub Actions Ubuntu it is slightly faster.  
+/// ...
 pub fn shortscale_vec_push(num: u64) -> String {
     // simple lookup in map
     if num <= 20 || num > 999_999_999_999_999_999 {
@@ -94,7 +309,8 @@ fn vec_push_scale(v: &mut Strvec, num: u64, thousands: u64) {
 /// First Rust implementation (ever for me)  
 /// Modeled after [javascript version](https://github.com/jldec/shortscale)  
 /// Functional composition by allocating and concatenating Vecs.  
-/// This is much slower than using a String builder and slower than JavaScript on MacOS.
+/// This is much slower than using a String builder and slower than JavaScript on MacOS.  
+/// ...
 pub fn shortscale_vec_concat(num: u64) -> String {
     // simple lookup in map
     if num <= 20 || num > 999_999_999_999_999_999 {
@@ -166,9 +382,10 @@ fn concat_and(v1: Strvec, v2: Strvec) -> Strvec {
 
 /* ******************************************************************** */
 
-/// Reimplementation of `shortscale_vec_concat`  
+/// Reimplementation of shortscale_vec_concat  
 /// Composition pushing Strings returned from functions.  
-/// This is even slower than concatenating Vecs.
+/// This is even slower than concatenating Vecs.  
+/// ...
 pub fn shortscale_string_join(num: u64) -> String {
     // simple lookup in map
     if num <= 20 || num > 999_999_999_999_999_999 {
