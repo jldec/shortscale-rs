@@ -1,4 +1,4 @@
-//! Conditionally-compiled for benchmarks and historic reference.   
+//! Conditionally-compiled for historic reference.   
 //! To include in tests and benchmarks set RUSTFLAGS="--cfg extra"
 //!
 //! ### Sample benchmarks
@@ -416,7 +416,7 @@ fn join_words(s: &mut String, sep: &str, words: String) {
     }
 }
 
-// 0 represented with empty Vec for composition using [Vec].concat()
+// 0 returns ""
 fn lookup_word(num: u64) -> String {
     match num {
         0 => String::from(""),
