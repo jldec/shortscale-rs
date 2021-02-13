@@ -1,6 +1,6 @@
 use shortscale;
 
-const TESTS: [(u64, &str); 47] = [
+const TESTS: [(u64, &str); 48] = [
     /* 0 */
     (0, "zero"),
     (1, "one"),
@@ -11,6 +11,7 @@ const TESTS: [(u64, &str); 47] = [
     (22, "twenty two"),
     (30, "thirty"),
     (33, "thirty three"),
+    (40, "forty"),
     (111, "one hundred and eleven"),
     /* 0 */
     (120, "one hundred and twenty"),
@@ -50,7 +51,7 @@ const TESTS: [(u64, &str); 47] = [
     (999_999_120, "nine hundred and ninety nine million nine hundred and ninety nine thousand one hundred and twenty"),
     (420_000_999_015, "four hundred and twenty billion nine hundred and ninety nine thousand and fifteen"),
     (9_007_199_254_740_999, "nine quadrillion seven trillion one hundred and ninety nine billion \
-        two hundred and fifty four million seven hundred and fourty thousand nine hundred and ninety nine"),
+        two hundred and fifty four million seven hundred and forty thousand nine hundred and ninety nine"),
     (999_999_999_999_999_999, "nine hundred and ninety nine quadrillion nine hundred and ninety nine trillion \
     nine hundred and ninety nine billion nine hundred and ninety nine million nine hundred and ninety nine thousand \
     nine hundred and ninety nine"),
