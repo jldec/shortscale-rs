@@ -37,7 +37,7 @@ use std::fmt::Write;
 /// using [NumWords](./struct.NumWords.html) Display trait.  
 /// ...
 pub fn shortscale_display(num: u64) -> String {
-    let mut s = String::with_capacity(238);
+    let mut s = String::new();
     write!(&mut s, "{}", NumWords::new(num)).unwrap();
     return s;
 }
@@ -172,7 +172,7 @@ pub fn shortscale_str_push(num: u64) -> String {
         return String::from(map(num));
     }
 
-    let mut s = String::with_capacity(238);
+    let mut s = String::new();
 
     push_scale(&mut s, num, 1_000_000_000_000_000); // quadrillions
     push_scale(&mut s, num, 1_000_000_000_000); // trillions
@@ -249,7 +249,7 @@ pub fn shortscale_vec_push(num: u64) -> String {
         return String::from(map(num));
     }
 
-    let mut v: Strvec = Vec::with_capacity(35);
+    let mut v: Strvec = Vec::new();
 
     vec_push_scale(&mut v, num, 1_000_000_000_000_000); // quadrillions
     vec_push_scale(&mut v, num, 1_000_000_000_000); // trillions
@@ -392,7 +392,7 @@ pub fn shortscale_string_join(num: u64) -> String {
         return String::from(map(num));
     }
 
-    let mut s = String::with_capacity(238);
+    let mut s = String::new();
 
     join_words(&mut s, " ", scale_words(num, 1_000_000_000_000_000));
     join_words(&mut s, " ", scale_words(num, 1_000_000_000_000));

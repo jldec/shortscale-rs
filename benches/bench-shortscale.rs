@@ -4,7 +4,7 @@ use shortscale;
 #[cfg(extra)]
 use std::fmt::Write;
 
-const NUM: u64 = 9_007_199_254_740_991;
+const NUM: u64 = 740_991;
 
 fn a_shortscale(b: &mut Bencher) {
     let mut cnt: u64 = 0;
