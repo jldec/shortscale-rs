@@ -28,7 +28,7 @@
 ///     );
 /// ```
 pub fn shortscale(num: u64) -> String {
-    let mut s = String::with_capacity(238);
+    let mut s = String::new();
     shortscale_string_writer(&mut s, num);
     return s;
 }

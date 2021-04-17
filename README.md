@@ -54,24 +54,24 @@ For benchmarks run `RUSTFLAGS="--cfg extra" cargo bench`.
 
 GitHub Actions, running on Ubuntu.
 ```txt
-test a_shortscale                        ... bench:         290 ns/iter (+/- 20)
-test b_shortscale_string_writer_no_alloc ... bench:         265 ns/iter (+/- 47)
-test c_str_push                          ... bench:         278 ns/iter (+/- 44)
-test d_vec_push                          ... bench:         264 ns/iter (+/- 30)
-test e_display_no_alloc                  ... bench:         687 ns/iter (+/- 283)
-test f_vec_concat                        ... bench:       1,622 ns/iter (+/- 72)
-test g_string_join                       ... bench:       1,751 ns/iter (+/- 57)
+test a_shortscale                        ... bench:         262 ns/iter (+/- 42)
+test b_shortscale_string_writer_no_alloc ... bench:          99 ns/iter (+/- 17)
+test c_str_push                          ... bench:         266 ns/iter (+/- 55)
+test d_vec_push                          ... bench:         301 ns/iter (+/- 48)
+test e_display_no_alloc                  ... bench:         254 ns/iter (+/- 55)
+test f_vec_concat                        ... bench:         635 ns/iter (+/- 131)
+test g_string_join                       ... bench:         632 ns/iter (+/- 80)
 ```
 
 On MacOS Catalina 2.6 GHz Intel Core i7 memory allocation appears to be a lot slower.
 ```txt
-test a_shortscale                        ... bench:         251 ns/iter (+/- 18)
-test b_shortscale_string_writer_no_alloc ... bench:         191 ns/iter (+/- 11)
-test c_str_push                          ... bench:         247 ns/iter (+/- 22)
-test d_vec_push                          ... bench:         363 ns/iter (+/- 26)
-test e_display_no_alloc                  ... bench:         498 ns/iter (+/- 21)
-test f_vec_concat                        ... bench:       4,459 ns/iter (+/- 344)
-test g_string_join                       ... bench:       5,549 ns/iter (+/- 378)
+test a_shortscale                        ... bench:         378 ns/iter (+/- 59)
+test b_shortscale_string_writer_no_alloc ... bench:          75 ns/iter (+/- 2)
+test c_str_push                          ... bench:         396 ns/iter (+/- 42)
+test d_vec_push                          ... bench:         435 ns/iter (+/- 12)
+test e_display_no_alloc                  ... bench:         217 ns/iter (+/- 30)
+test f_vec_concat                        ... bench:       2,087 ns/iter (+/- 79)
+test g_string_join                       ... bench:       2,166 ns/iter (+/- 225)
 ```
 
 ### JavaScript
@@ -81,15 +81,15 @@ shows that JavaScript is really fast as well - faster on MacOS than my first 2 n
 
 Ubuntu, Node v14
 ```
-20000 calls, 3280000 bytes, 2211 ns/call
-20000 calls, 3280000 bytes, 2180 ns/call
-20000 calls, 3280000 bytes, 2172 ns/call
+20000 calls, 1200000 bytes, 1373 ns/call
+20000 calls, 1200000 bytes, 1336 ns/call
+20000 calls, 1200000 bytes, 1480 ns/call
 ```
 MacOS
 ```txt
-20000 calls, 3280000 bytes, 1342 ns/call
-20000 calls, 3280000 bytes, 1363 ns/call
-20000 calls, 3280000 bytes, 1342 ns/call
+20000 calls, 1200000 bytes, 967 ns/call
+20000 calls, 1200000 bytes, 982 ns/call
+20000 calls, 1200000 bytes, 965 ns/call
 ```
 
 Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
