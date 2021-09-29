@@ -21,7 +21,11 @@
         }
       },
       "args": [],
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "initCommands": [
+        "settings set target.disable-aslr false"
+      ]
     },
     {
       "type": "lldb",
@@ -40,7 +44,11 @@
         }
       },
       "args": [],
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "initCommands": [
+        "settings set target.disable-aslr false"
+      ]
     },
     {
       "type": "lldb",
@@ -59,7 +67,11 @@
         }
       },
       "args": [],
-      "cwd": "${workspaceFolder}"
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "initCommands": [
+        "settings set target.disable-aslr false"
+      ]
     }
   ]
 }
