@@ -1,0 +1,5 @@
+
+vscode:
+  extensions:
+    - vadimcn.vscode-lldb
+    - matklad.rust-analyzer
