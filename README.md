@@ -50,7 +50,8 @@ assert_eq!(my_string, "The number 27 in words is twenty seven");
 ### Extra
 As a record of my first foray into rust, older implementations are preserved under
 [shortscale::extra](https://docs.rs/shortscale/latest/shortscale/extra/index.html).
-For benchmarks run `RUSTFLAGS="--cfg extra" cargo bench`. 
+
+For benchmarks run `RUSTFLAGS="--cfg extra" cargo bench`
 
 GitHub Actions, running on Ubuntu.
 ```txt
@@ -92,4 +93,8 @@ MacOS
 20000 calls, 1200000 bytes, 965 ns/call
 ```
 
-Copyright 2021, Jürgen Leschner - github.com/jldec - MIT license
+> [!NOTE]
+> More recent rust versions will complain about `unexpected "cfg" condition name: "extra"`.  
+> This has been mitigated using the [lints.rust] unexpected_cfgs in Cargo.toml.
+
+Copyright 2021-2024, Jürgen Leschner - github.com/jldec - MIT license
